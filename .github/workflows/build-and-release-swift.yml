@@ -114,11 +114,11 @@ jobs:
       run: |
         link="${{ inputs.ipa_url }}"
         echo "Downloading IPA from: $link"
-        wget --no-check-certificate -q "$link"
+        wget --no-check-certificate -q "$link" -O spotify.ipa
         filename=$(basename "$link")
-        version=$(echo "$filename" | cut -d'-' -f2 | sed 's/.ipa//')
+        version=$(echo "$filename" | sed -E 's/.*[-_]([0-9]+\.[0-9]+\.[0-9]+)\.ipa/\1/')
         echo "SPOTIFY_VERSION=$version" >> $GITHUB_ENV
-        echo "SPOTIFY_PACKAGE=$(echo *.ipa)" >> $GITHUB_ENV
+        echo "SPOTIFY_PACKAGE=spotify.ipa" >> $GITHUB_ENV
 
     - name: Setup insert-dylib
       run: |
