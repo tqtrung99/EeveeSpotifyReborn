@@ -41,6 +41,10 @@ jobs:
             echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
             exit 1
           fi
+          unzip -q  ${{ github.workspace }}/spotify.ipa -d  ${{ github.workspace }}/ipa_unpacked
+          plist_file=$(find ${{ github.workspace }}/ipa_unpacked/Payload -name Info.plist | head -n 1)
+          version=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$plist_file")
+          echo "SPOTIFY_VERSION=$version" >> $GITHUB_ENV
 
       - name: Download and Validate Tweak
         run: |
@@ -87,12 +91,12 @@ jobs:
 
       - name: Create EeveeSpotify Package
         run: |
-          ivinject-arm64 spotify.ipa EeveeSpotify.ipa \
+          ivinject-arm64 spotify.ipa EeveeSpotify-${SPOTIFY_VERSION}.ipa \
             -i eeveespotify.deb "$SWIFTPROTOBUF_ROOTFUL" "$OPENSPOTIFYSAFARIEXTENSION" \
             -s - -d --level Optimal
 
       - name: Create Patched Package
-        run: ipapatch -input EeveeSpotify.ipa -output EeveeSpotify-patched.ipa
+        run: ipapatch -input EeveeSpotify-${SPOTIFY_VERSION}.ipa -output EeveeSpotify-${SPOTIFY_VERSION}-patched.ipa
    
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v2.0.1
@@ -100,8 +104,8 @@ jobs:
           tag_name: eevee-${{ github.run_number }}
           name: EeveeSpotify (${{ github.run_number }})
           files: |
-            EeveeSpotify.ipa 
-            EeveeSpotify-patched.ipa
+            EeveeSpotify-${SPOTIFY_VERSION}.ipa 
+            EeveeSpotify-${SPOTIFY_VERSION}-patched.ipa
           draft: true
 
       - name: Output Release URL
