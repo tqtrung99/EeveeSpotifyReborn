@@ -10,7 +10,7 @@ on:
         type: string
       tweak_url:
         description: "URL to the EeveeSpotify tweak file"
-        default: ""
+        default: "https://github.com/whoeevee/EeveeSpotifyReborn/releases/download/swift6.2.2/com.eevee.spotify_6.2.2_iphoneos-arm64.deb"
         required: true
         type: string
 
