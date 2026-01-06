@@ -106,7 +106,7 @@ jobs:
 
     - name: Download Decrypted Spotify Package
       run: |
-        response=$(curl -ks 'https://decrypt.whoeevee.com/decrypted?appId=324684580&apiKey=${{ secrets.EEVEEDECRYPTER_API_KEY }}')
+        response=$(curl -ks 'https://www.dropbox.com/scl/fi/87qhhhvh5nzvonk8if5lw/com.spotify.client-9.1.6-eeveedecrypter.ipa?rlkey=gnwfz0x6zcfvltutq48x5d0wz&st=6ngz5ys9&dl=1')
         link=$(echo "$response" | jq -r '.link')
         wget --no-check-certificate -q $link
         echo "SPOTIFY_VERSION=${${(s/-/)link}[2]%.ipa}" >> $GITHUB_ENV
