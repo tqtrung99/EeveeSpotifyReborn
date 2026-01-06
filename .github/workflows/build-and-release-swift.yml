@@ -2,6 +2,12 @@ name: Build and Release Swift
 
 on:
   workflow_dispatch: 
+      inputs:
+        ipa_url:
+          description: "URL to the decrypted IPA file"
+          default: ""
+          required: true
+          type: string
 
 env:
   SWIFTPROTOBUF_VERSION: "1.29.0"
@@ -106,9 +112,7 @@ jobs:
 
     - name: Download Decrypted Spotify Package
       run: |
-        response=$(curl -ks 'https://www.dropbox.com/scl/fi/87qhhhvh5nzvonk8if5lw/com.spotify.client-9.1.6-eeveedecrypter.ipa?rlkey=gnwfz0x6zcfvltutq48x5d0wz&st=6ngz5ys9&dl=1')
-        link=$(echo "$response" | jq -r '.link')
-        wget --no-check-certificate -q $link
+        wget --no-check-certificate -q "${{ inputs.ipa_url }}"
         echo "SPOTIFY_VERSION=${${(s/-/)link}[2]%.ipa}" >> $GITHUB_ENV
         echo "SPOTIFY_PACKAGE=$(echo *.ipa)" >> $GITHUB_ENV
 
