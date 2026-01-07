@@ -1,4 +1,4 @@
-name: Build and Release Swift
+name: Build EeveeSpotify .DEB
 
 on:
   workflow_dispatch: 
